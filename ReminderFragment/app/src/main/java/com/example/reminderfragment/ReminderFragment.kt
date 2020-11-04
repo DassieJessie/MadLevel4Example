@@ -100,8 +100,14 @@ class ReminderFragment : Fragment() {
             // Callback triggered when a user swiped an item.
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                reminders.removeAt(position)
-                reminderAdapter.notifyDataSetChanged()
+//                reminders.removeAt(position)
+//                reminderAdapter.notifyDataSetChanged()
+                
+                val reminderToDelete = reminders[position]
+                reminderRepository.deleteReminder(reminderToDelete)
+                //Refreshes/update rv from database
+                getRemindersFromDatabase()
+
             }
         }
         
