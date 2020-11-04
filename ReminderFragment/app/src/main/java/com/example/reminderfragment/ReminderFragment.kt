@@ -52,7 +52,7 @@ class ReminderFragment : Fragment() {
         //adds all the reminders from the database to the list
         this.reminders.addAll(reminders)
 
-        
+
         reminderAdapter.notifyDataSetChanged()
     }
 
@@ -72,8 +72,12 @@ class ReminderFragment : Fragment() {
             bundle.getString(BUNDLE_REMINDER_KEY)?.let {
                 val reminder = Reminder(it)
 
-                reminders.add(reminder)
-                reminderAdapter.notifyDataSetChanged()
+//                reminders.add(reminder)
+//                reminderAdapter.notifyDataSetChanged()
+                reminderRepository.insertReminder(reminder)
+                //Refreshes rv from database
+                getRemindersFromDatabase()
+
             } ?: Log.e("ReminderFragment", "Request triggered, but empty reminder text!")
 
         }
