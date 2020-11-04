@@ -18,6 +18,9 @@ import kotlinx.android.synthetic.main.fragment_reminder.*
 
 class ReminderFragment : Fragment() {
 
+    //database repo
+    private lateinit var reminderRepository: ReminderRepository
+
     private val reminders = arrayListOf<Reminder>()
     private val reminderAdapter = ReminderAdapter(reminders)
 
@@ -34,7 +37,25 @@ class ReminderFragment : Fragment() {
 
         initViews()
         observeAddReminderResult()
+
+
+        reminderRepository = ReminderRepository(requireContext())
+        getRemindersFromDatabase()
+
     }
+
+    private fun getRemindersFromDatabase() {
+        //get all the reminders from the database
+        val reminders = reminderRepository.getAllReminders()
+        //clears current reminders list
+        this.reminders.clear()
+        //adds all the reminders from the database to the list
+        this.reminders.addAll(reminders)
+
+        
+        reminderAdapter.notifyDataSetChanged()
+    }
+
 
     private fun initViews() {
         // Initialize the recycler view with a linear layout manager, adapter
