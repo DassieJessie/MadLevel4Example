@@ -18,20 +18,20 @@ public class ReminderRepository(context: Context) { //needs a context object bec
         reminderDao = reminderRoomDatabase!!.reminderDao() //constructed using the abstract method we added in the ReminderRoomDatabase class
     }
 
-    fun getAllReminders(): List<Reminder> {
+    suspend fun getAllReminders(): List<Reminder> {
         return reminderDao.getAllReminders()
     }
 
-    fun insertReminder(reminder: Reminder) {
+    suspend fun insertReminder(reminder: Reminder) {
         reminderDao.insertReminder(reminder)
     }
 
-    fun deleteReminder(reminder: Reminder) {
+    suspend fun deleteReminder(reminder: Reminder) {
         reminderDao.deleteReminder(reminder)
     }
 
 
-    fun updateReminder(reminder: Reminder) {
+    suspend fun updateReminder(reminder: Reminder) {
         reminderDao.updateReminder(reminder)
     }
 
