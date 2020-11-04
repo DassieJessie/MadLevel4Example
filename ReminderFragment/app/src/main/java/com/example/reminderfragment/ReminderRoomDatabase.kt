@@ -27,7 +27,14 @@ abstract class ReminderRoomDatabase : RoomDatabase() {
                             context.applicationContext,
                             ReminderRoomDatabase::class.java, DATABASE_NAME
                         )
-                            .allowMainThreadQueries()
+                            /**
+                             * When a query is performed on the main thread then the user interface
+                             * will stop working until the query is finished. In other words the screen
+                             * will freeze for 3 seconds if the query takes 3 seconds. Enabling this
+                             * was only meant for purposes of going through the basics of Room in the
+                             * previous steps of this tutorial. Never allow this in a finished app.
+                             */
+                            //.allowMainThreadQueries()
                             .build()
                     }
                 }
