@@ -14,6 +14,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_reminder.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ReminderFragment : Fragment() {
@@ -45,15 +49,43 @@ class ReminderFragment : Fragment() {
     }
 
     private fun getRemindersFromDatabase() {
-        //get all the reminders from the database
-        val reminders = reminderRepository.getAllReminders()
-        //clears current reminders list
-        this.reminders.clear()
-        //adds all the reminders from the database to the list
-        this.reminders.addAll(reminders)
+        /**
+         * In Kotlin, all coroutines must run in a dispatcher — even when they’re running on the main thread
+         *
+         * Kotlin provides three Dispatchers you can use. The dispatchers being:
+         * Dispatchers.Main: Main thread on Android, interact with the UI and perform light work.
+         * Dispatchers.IO: Optimized for disk and network IO.
+         * Dispatchers.Default: Optimized for CPU intensive work.
+         *
+         * - For updating the user interface we will be using the Main dispatcher.
+         * - doing database operations we are going to be needing the IO dispatcher
+         *
+         * The reason why we have to start all the Coroutines inside a Main dispatcher is because it’s not
+         * possible to modify the user interface within an IO thread.
+         */
+        CoroutineScope(Dispatchers.Main).launch {
+            //get all the reminders from the database
+            val reminders = withContext(Dispatchers.IO) {
+                reminderRepository.getAllReminders()
+            }
+            //clears current reminders list
+            this@ReminderFragment.reminders.clear()
+            //adds all the reminders from the database to the list
+            this@ReminderFragment.reminders.addAll(reminders)
 
 
-        reminderAdapter.notifyDataSetChanged()
+            reminderAdapter.notifyDataSetChanged()
+        }
+
+//        //get all the reminders from the database
+//        val reminders = reminderRepository.getAllReminders()
+//        //clears current reminders list
+//        this.reminders.clear()
+//        //adds all the reminders from the database to the list
+//        this.reminders.addAll(reminders)
+//
+//
+//        reminderAdapter.notifyDataSetChanged()
     }
 
 
@@ -72,11 +104,18 @@ class ReminderFragment : Fragment() {
             bundle.getString(BUNDLE_REMINDER_KEY)?.let {
                 val reminder = Reminder(it)
 
-//                reminders.add(reminder)
-//                reminderAdapter.notifyDataSetChanged()
-                reminderRepository.insertReminder(reminder)
-                //Refreshes rv from database
-                getRemindersFromDatabase()
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.IO) {
+                        reminderRepository.insertReminder(reminder)
+                    }
+                    //Refreshes/ updates rv from database
+                    getRemindersFromDatabase()
+                }
+
+
+//                reminderRepository.insertReminder(reminder)
+//                Refreshes rv from database
+//                getRemindersFromDatabase()
 
             } ?: Log.e("ReminderFragment", "Request triggered, but empty reminder text!")
 
@@ -100,13 +139,22 @@ class ReminderFragment : Fragment() {
             // Callback triggered when a user swiped an item.
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-//                reminders.removeAt(position)
-//                reminderAdapter.notifyDataSetChanged()
-                
+
                 val reminderToDelete = reminders[position]
-                reminderRepository.deleteReminder(reminderToDelete)
-                //Refreshes/update rv from database
-                getRemindersFromDatabase()
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.IO) {
+                        reminderRepository.deleteReminder(reminderToDelete)
+                    }
+                    //Refreshes/update rv from database
+                    getRemindersFromDatabase()
+                }
+
+
+//                val reminderToDelete = reminders[position]
+//                reminderRepository.deleteReminder(reminderToDelete)
+//                //Refreshes/update rv from database
+//                getRemindersFromDatabase()
 
             }
         }

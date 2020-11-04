@@ -13,6 +13,10 @@ interface ReminderDao {
      * be called without using Coroutines.
      *
      * (to ensure that they are not executed on the main thread)
+     *
+     * The biggest difference is that coroutines are very cheap, almost free: we can create thousands
+     * of them, and pay very little in terms of performance. True threads, on the other hand, are
+     * expensive to start and keep around
      */
     @Query("SELECT * FROM reminderTable") //retrieve all reminders from the database
     suspend fun getAllReminders(): List<Reminder>
