@@ -1,4 +1,4 @@
-package com.example.reminderfragment
+package com.example.reminderfragment.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

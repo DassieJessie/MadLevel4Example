@@ -1,6 +1,9 @@
-package com.example.reminderfragment
+package com.example.reminderfragment.repository
 
 import android.content.Context
+import com.example.reminderfragment.dao.ReminderDao
+import com.example.reminderfragment.database.ReminderRoomDatabase
+import com.example.reminderfragment.model.Reminder
 
 /**
  * create a repository class which is responsible for using the DAO to make operations

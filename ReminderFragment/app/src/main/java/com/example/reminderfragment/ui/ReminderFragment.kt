@@ -1,4 +1,4 @@
-package com.example.reminderfragment
+package com.example.reminderfragment.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -6,13 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.setFragmentResultListener
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.reminderfragment.R
+import com.example.reminderfragment.model.Reminder
+import com.example.reminderfragment.repository.ReminderRepository
 import kotlinx.android.synthetic.main.fragment_reminder.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,8 @@ class ReminderFragment : Fragment() {
     private lateinit var reminderRepository: ReminderRepository
 
     private val reminders = arrayListOf<Reminder>()
-    private val reminderAdapter = ReminderAdapter(reminders)
+    private val reminderAdapter =
+        ReminderAdapter(reminders)
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +45,10 @@ class ReminderFragment : Fragment() {
         observeAddReminderResult()
 
 
-        reminderRepository = ReminderRepository(requireContext())
+        reminderRepository =
+            ReminderRepository(
+                requireContext()
+            )
         getRemindersFromDatabase()
 
     }
@@ -111,7 +116,6 @@ class ReminderFragment : Fragment() {
                     //Refreshes/ updates rv from database
                     getRemindersFromDatabase()
                 }
-
 
 //                reminderRepository.insertReminder(reminder)
 //                Refreshes rv from database

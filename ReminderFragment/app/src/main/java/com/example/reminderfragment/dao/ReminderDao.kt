@@ -1,6 +1,7 @@
-package com.example.reminderfragment
+package com.example.reminderfragment.dao
 
 import androidx.room.*
+import com.example.reminderfragment.model.Reminder
 
 //To get access to the Room database we are using a DAO(Data Access Object)
 //A Dao can either be an interface or an abstract class
